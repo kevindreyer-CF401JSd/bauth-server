@@ -29,6 +29,8 @@ userSchema.statics.authenticateBasic = function (username, password) {
     .catch(console.error)
 }
 
+//build token for bearer auth
+
 userSchema.methods.comparePassword = function (password) {
   // Compare a given password against the stored hashed password
   // If it matches, return the user instance, otherwise return null

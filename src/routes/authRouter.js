@@ -23,6 +23,8 @@ authRouter.get('/users', async (req, res, next) => {
   res.status(200).json(allUsers)
 })
 
+//Add post route for bearer auth 
+
 const handleOauth = require('../middleware/handleOauth')
 authRouter.get('/oauth', handleOauth, (req, res, next) => {
   res.status(200).json({ message: 'signed in with oauth' })
