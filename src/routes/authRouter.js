@@ -1,8 +1,9 @@
 const express = require('express')
 const authRouter = express.Router()
 
-const User = require('../models/users')
-const basicAuth = require('../middleware/basicAuth')
+const User = require('../models/users');
+const basicAuth = require('../middleware/basicAuth');
+const bearerAuth = require('../middleware/bearerAuth');
 
 authRouter.post('/signup', (req, res, next) => {
   // expects the user sent a req body with username and password
@@ -23,7 +24,8 @@ authRouter.get('/users', async (req, res, next) => {
   res.status(200).json(allUsers)
 })
 
-//Add post route for bearer auth 
+//Add route with middleware for bearerauth
+
 
 const handleOauth = require('../middleware/handleOauth')
 authRouter.get('/oauth', handleOauth, (req, res, next) => {
