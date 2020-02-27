@@ -25,6 +25,9 @@ authRouter.get('/users', async (req, res, next) => {
 })
 
 //Add route with middleware for bearerauth
+authRouter.get('/supersecret', bearerAuth, (req, res, next) => {
+  res.status(200).json([{ username: 'name here', time: 'timehere' }])
+})
 
 
 const handleOauth = require('../middleware/handleOauth')
