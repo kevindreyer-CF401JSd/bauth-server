@@ -47,15 +47,16 @@ userSchema.statics.authenticateToken = async function (token) {
     if (!tokenObject.username) {
       return Promise.reject(new Error('Token is malformed'))
     }
-    // reject token if userValid in token doesn't match in db
-    // this.Schema
-
-    if (true) {
-      // console.log('user id',currentUser)
-      // console.log('dbUSer',dbUser)
-    }
+    
     const user = await this.findOne({ username: tokenObject.username })
-    return user
+    // reject token if userValid in token doesn't match in db
+    console.log('user.userValid',user.userValid);
+    if (user.userValid) {
+      return user
+    } else {
+      return Promise.reject(new Error('Token in valid'))
+    }
+    
   } catch (error) {
     return Promise.reject(error)
   }
