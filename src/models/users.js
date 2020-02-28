@@ -19,7 +19,9 @@ userSchema.methods.generateToken = function () {
   const tokenData = {
     id: this._id,
     username: this.username,
-    issueTime: Date.now()
+    issueTime: Date.now(),
+    secretData: 'cheese',
+    exp: Math.floor(Date.now() / 1000) + (60 * 60)
     //add more stuff here
   }
   //generate token
@@ -41,6 +43,12 @@ userSchema.statics.authenticateToken = async function (token) {
     console.log('verified tokenObject',tokenObject)
     if (!tokenObject.username) {
       return Promise.reject(new Error('Token is malformed'))
+    }
+    // reject token of older than a certain time
+    if (tokenObject.issueTime + 60000 < Date.now()) {
+      console.log('issueTime exceeded',tokenObject.issueTime)
+      console.log('current time',Date.now())
+      // return Promise.reject(new Error('Issue Time Exceeded'))
     }
     const user = await this.findOne({ username: tokenObject.username })
     return user

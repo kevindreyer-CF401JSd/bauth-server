@@ -9,8 +9,9 @@ authRouter.post('/signup', (req, res, next) => {
   // expects the user sent a req body with username and password
   // take that username and password and make a new user with it
   const user = new User(req.body)
+  console.log('req ----------------', req)
   user.save()
-    .then(result => res.status(200).json({ token: user.generateToken() }))
+    .then(result => res.status(200).json({ token: user.generateToken()}))
     .catch(next)
 })
 
@@ -20,15 +21,16 @@ authRouter.post('/signin', basicAuth, (req, res, next) => {
 
 authRouter.get('/users', async (req, res, next) => {
   // send all users
+  
   const allUsers = await User.find({})
   res.status(200).json(allUsers)
 })
 
 //Add route with middleware for bearerauth
 authRouter.get('/supersecret', bearerAuth, (req, res, next) => {
-  res.status(200).json([{ username: 'name here', time: 'timehere' }])
+  // console.log('res',res)
+  res.status(200).json([{ username: 'name here', time: 'timehere', }])
 })
-
 
 const handleOauth = require('../middleware/handleOauth')
 authRouter.get('/oauth', handleOauth, (req, res, next) => {
