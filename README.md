@@ -3,7 +3,29 @@ Bearer Authorization server
 
 Create route for bearer auth and then add additional security to the token
 
+## Checklist of tasks
+- [x] - Assignment 1
+- [x] - Assignment 2
+  - [x] - 2 security measures
+    - [x] - token expires as one hour
+    - [x] - token rejected if userValid in DB set to false
 
+## MongoDB Schema
+```
+  username: { type: String, required: true, unique: true },
+  password: { type: String, required: true, default: 'unguessable password' },
+  userValid: { type: Boolean, default: true }
+```
+
+## Token data
+```
+    id: this._id,
+    username: this.username,
+    issueTime: Date.now(),
+    isValid: this.userValid,
+```
+
+### route testing
 `http get :3000/users`
 
 `http post :3000/signup username=kd email="kevindreyer@example.com" password=password`
