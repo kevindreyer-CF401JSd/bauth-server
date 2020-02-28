@@ -2,11 +2,15 @@ const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 
+
 const SECRET = process.env.SECRET || 'changeme'
+const EXPIRE = process.env.TOKEN_EXPIRATION_MINUTES || 60
+const expiredUsers = 'testUser'
 
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
-  password: { type: String, required: true, default: 'unguessable password' }
+  password: { type: String, required: true, default: 'unguessable password' },
+  userValid: { type: Boolean, default: true }
 })
 
 userSchema.pre('save', async function () {
@@ -20,12 +24,11 @@ userSchema.methods.generateToken = function () {
     id: this._id,
     username: this.username,
     issueTime: Date.now(),
-    secretData: 'cheese',
-    exp: Math.floor(Date.now() / 1000) + (60 * 60)
-    //add more stuff here
+    isValid: this.userValid,
   }
+  // console.log('tokenData.exp',tokenData.exp)
   //generate token
-  return jwt.sign(tokenData, SECRET)
+  return jwt.sign(tokenData, SECRET, { expiresIn: '1h'})
 }
 
 userSchema.statics.authenticateBasic = function (username, password) {
@@ -40,15 +43,16 @@ userSchema.statics.authenticateToken = async function (token) {
   try {
     // verify and decode token
     const tokenObject = jwt.verify(token, SECRET)
-    console.log('verified tokenObject',tokenObject)
+    // console.log('verified tokenObject',tokenObject)
     if (!tokenObject.username) {
       return Promise.reject(new Error('Token is malformed'))
     }
-    // reject token of older than a certain time
-    if (tokenObject.issueTime + 60000 < Date.now()) {
-      console.log('issueTime exceeded',tokenObject.issueTime)
-      console.log('current time',Date.now())
-      // return Promise.reject(new Error('Issue Time Exceeded'))
+    // reject token if userValid in token doesn't match in db
+    // this.Schema
+
+    if (true) {
+      // console.log('user id',currentUser)
+      // console.log('dbUSer',dbUser)
     }
     const user = await this.findOne({ username: tokenObject.username })
     return user

@@ -9,7 +9,7 @@ authRouter.post('/signup', (req, res, next) => {
   // expects the user sent a req body with username and password
   // take that username and password and make a new user with it
   const user = new User(req.body)
-  console.log('req ----------------', req)
+  // console.log('req ----------------', req)
   user.save()
     .then(result => res.status(200).json({ token: user.generateToken()}))
     .catch(next)
@@ -27,9 +27,12 @@ authRouter.get('/users', async (req, res, next) => {
 })
 
 //Add route with middleware for bearerauth
-authRouter.get('/supersecret', bearerAuth, (req, res, next) => {
-  // console.log('res',res)
-  res.status(200).json([{ username: 'name here', time: 'timehere', }])
+authRouter.get('/supersecret', bearerAuth, async (req, res, next) => {
+  // console.log('req.user',req.user)
+  console.log('req.user.id',req.user.id)
+  // const dbUser = await User.find(req.user.id)
+  // console.log('dbUser',dbUser)
+  res.status(200).json([{ username: req.user.username, userValid: req.user.userValid }])
 })
 
 const handleOauth = require('../middleware/handleOauth')
